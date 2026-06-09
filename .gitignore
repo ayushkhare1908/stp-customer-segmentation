@@ -1,8 +1,10 @@
+# Python Environments
 .venv/
 __pycache__/
+
+# Credentials
 .env
-.git/
-.dvc/
-models/
-notebooks/
-tests/
+
+# Data (Managed by DVC)
+Raw_data/
+data/processed/

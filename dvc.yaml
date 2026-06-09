@@ -5,10 +5,12 @@ stages:
       - src/data_prep.py
       - data/raw/online_retail.csv
     outs:
-      - data/processed/rfm_data.csv
+      - data/processed/rfm_processed.csv
 
   model_training:
     cmd: python src/train.py
     deps:
       - src/train.py
-      - data/processed/rfm_data.csv
+      - data/processed/rfm_processed.csv
+    outs:
+      - models/model.pkl

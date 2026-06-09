@@ -1,5 +1,5 @@
 [core]
     remote = ovgu-remote
 ['remote "ovgu-remote"']
-    url = webdav://cloud.ovgu.de/remote.php/dav/files/jashkumar.dhameliya/stp-project-data
-    user = jashkumar.dhameliya
+    url = webdavs://cloud.ovgu.de/remote.php/webdav/stp-project-data
+    user = qeji53da
