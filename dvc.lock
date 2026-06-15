@@ -5,28 +5,28 @@ stages:
     deps:
     - path: data/raw/online_retail.csv
       hash: md5
-      md5: b892492f3285e2e8490fa6467be88f0b
-      size: 45038760
+      md5: daa8af5b5d3b5cc329455082ba212e01
+      size: 48039726
     - path: src/data_prep.py
       hash: md5
-      md5: 427bd28eacf5b92027ddd516952a874c
-      size: 396
+      md5: 56628fd374e268a250dc00c45d943845
+      size: 3587
     outs:
     - path: data/processed/rfm_processed.csv
       hash: md5
-      md5: 6080f0184298b7b03f4b9225575fb118
-      size: 57
+      md5: 25321d3e0967a9f4352d1f349900b564
+      size: 268012
   model_training:
     cmd: python src/train.py
     deps:
     - path: data/processed/rfm_processed.csv
       hash: md5
-      md5: 6080f0184298b7b03f4b9225575fb118
-      size: 57
+      md5: 25321d3e0967a9f4352d1f349900b564
+      size: 268012
     - path: src/train.py
       hash: md5
-      md5: 508ccc23a45ccbdf11fca1c301d03aef
-      size: 779
+      md5: 24e13a4f69a39dbcd04bbc47dc92e84c
+      size: 756
     outs:
     - path: models/model.pkl
       hash: md5
