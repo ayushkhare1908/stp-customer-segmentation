@@ -6,6 +6,7 @@ stages:
       - data/raw/online_retail.csv
     outs:
       - data/processed/rfm_processed.csv
+      - models/scaler.pkl
 
   model_training:
     cmd: python src/train.py

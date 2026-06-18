@@ -9,20 +9,24 @@ stages:
       size: 48039726
     - path: src/data_prep.py
       hash: md5
-      md5: 56628fd374e268a250dc00c45d943845
-      size: 3587
+      md5: b6703518bb9b94b9e088ab68b73e11ed
+      size: 4288
     outs:
     - path: data/processed/rfm_processed.csv
       hash: md5
-      md5: 25321d3e0967a9f4352d1f349900b564
-      size: 268012
+      md5: e646dfc80d225428d9332dcade3e467f
+      size: 276688
+    - path: models/scaler.pkl
+      hash: md5
+      md5: 58add6437d5b2c285da1ef8c355a48a0
+      size: 561
   model_training:
     cmd: python src/train.py
     deps:
     - path: data/processed/rfm_processed.csv
       hash: md5
-      md5: 25321d3e0967a9f4352d1f349900b564
-      size: 268012
+      md5: e646dfc80d225428d9332dcade3e467f
+      size: 276688
     - path: src/train.py
       hash: md5
       md5: 24e13a4f69a39dbcd04bbc47dc92e84c
