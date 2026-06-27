@@ -5,17 +5,19 @@ Phase 2 - Data preparation and RFM feature engineering.
 Reads raw Online Retail data, cleans it, computes RFM features,
 applies log1p transform and RobustScaler, and saves the feature
 store to data/processed/rfm_processed.csv.
+Also exports the fitted scaler to models/scaler.pkl for use by the API.
 """
 
 import os
+import pickle
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import RobustScaler
 
 
 def load_data(path: str) -> pd.DataFrame:
-    """Load raw Online Retail Excel file into a DataFrame."""
-    df = pd.read_excel(path, dtype={"CustomerID": str})
+    """Load raw Online Retail CSV file into a DataFrame."""
+    df = pd.read_csv(path, dtype={"CustomerID": str})
     print(f"Loaded {len(df):,} rows from {path}")
     return df
 
@@ -71,11 +73,13 @@ def compute_rfm(df: pd.DataFrame) -> pd.DataFrame:
     return rfm
 
 
-def transform_and_scale(rfm: pd.DataFrame) -> pd.DataFrame:
+def transform_and_scale(rfm: pd.DataFrame) -> tuple:
     """
     Apply log1p transform to reduce right skew, then scale
     using RobustScaler (robust to outliers in spend data).
-    Returns DataFrame with scaled RFM features.
+    Returns a tuple of (scaled DataFrame, fitted scaler).
+    The fitted scaler must be saved and used by the API to
+    transform live incoming data to match the model training space.
     """
     rfm_transformed = rfm.copy()
 
@@ -91,7 +95,19 @@ def transform_and_scale(rfm: pd.DataFrame) -> pd.DataFrame:
     )
 
     print("log1p transform and RobustScaler applied")
-    return rfm_transformed
+    return rfm_transformed, scaler
+
+
+def save_scaler(scaler: RobustScaler, path: str) -> None:
+    """
+    Save the fitted RobustScaler to disk using pickle.
+    Required by the Phase 5 prediction API to transform
+    live incoming RFM values before passing to the model.
+    """
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        pickle.dump(scaler, f)
+    print(f"Scaler saved to {path}")
 
 
 def save_feature_store(df: pd.DataFrame, path: str) -> None:
@@ -102,11 +118,13 @@ def save_feature_store(df: pd.DataFrame, path: str) -> None:
 
 
 if __name__ == "__main__":
-    RAW_PATH = "data/raw/online_retail.xlsx"
+    RAW_PATH = "data/raw/online_retail.csv"
     PROCESSED_PATH = "data/processed/rfm_processed.csv"
+    SCALER_PATH = "models/scaler.pkl"
 
     df = load_data(RAW_PATH)
     df = clean_data(df)
     rfm = compute_rfm(df)
-    rfm_scaled = transform_and_scale(rfm)
+    rfm_scaled, scaler = transform_and_scale(rfm)
+    save_scaler(scaler, SCALER_PATH)
     save_feature_store(rfm_scaled, PROCESSED_PATH)
